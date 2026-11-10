@@ -42,7 +42,7 @@ export async function listCourses(filters: CourseFilters) {
       include: {
         department: { select: { id: true, name: true } },
         university: { select: { id: true, shortName: true, name: true } },
-        _count: { select: { resources: true } },
+        _count: { select: { enrollments: true } },
       },
     }),
     prisma.course.count({ where }),
@@ -60,13 +60,7 @@ export async function getCourseById(id: string) {
     include: {
       department: { select: { id: true, name: true, facultyId: true } },
       university: { select: { id: true, shortName: true, name: true } },
-      resources: {
-        where: { isPublished: true },
-        orderBy: { createdAt: 'desc' },
-        take: 20,
-        select: { id: true, title: true, type: true, fileUrl: true, createdAt: true },
-      },
-      _count: { select: { resources: true, enrollments: true } },
+      _count: { select: { enrollments: true } },
     },
   });
   if (!course || !course.isActive) throw new AppError('Course not found', 404);
@@ -115,7 +109,7 @@ export async function listMyCourses(userId: string) {
         include: {
           department: { select: { id: true, name: true } },
           university: { select: { id: true, shortName: true } },
-          _count: { select: { resources: true } },
+          _count: { select: { enrollments: true } },
         },
       },
     },
@@ -153,7 +147,6 @@ export async function getDashboard(userId: string) {
           units: true,
           academicLevel: true,
           semester: true,
-          _count: { select: { resources: true } },
         },
       },
     },
@@ -182,11 +175,6 @@ export async function getDashboard(userId: string) {
       })
     : [];
 
-  const continueLearning = enrollments
-    .filter((e) => e.course._count.resources > 0)
-    .slice(0, 4)
-    .map((e) => e.course);
-
   return {
     profile: {
       id: user.id,
@@ -200,7 +188,7 @@ export async function getDashboard(userId: string) {
       department: user.department,
     },
     registeredCourses: enrollments.map((e) => ({ enrollmentId: e.id, ...e.course })),
-    continueLearning,
+    continueLearning: enrollments.slice(0, 4).map((e) => e.course),
     recommendedCourses: recommended,
     stats: { enrolledCount: enrollments.length, recommendedCount: recommended.length },
   };
