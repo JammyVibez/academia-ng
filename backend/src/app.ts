@@ -10,13 +10,24 @@ import { coursesRouter } from './routes/courses';
 
 const app = express();
 
-app.use(helmet());
+// Allow cross-origin API reads from the web preview / mobile clients
 app.use(
-  cors({
-    origin: config.corsOrigin,
-    credentials: true,
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
   })
 );
+
+// Reflect request Origin (works with credentials). "*" alone is invalid with credentials:true.
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
 app.use(morgan(config.isDev ? 'dev' : 'combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +36,7 @@ app.get('/', (_req, res) => {
   res.json({
     success: true,
     name: 'Academia NG API',
-    version: '0.3.0',
+    version: '0.3.1',
     message: 'API is running. Use the paths below (all under /api).',
     endpoints: {
       health: 'GET /api/health',
