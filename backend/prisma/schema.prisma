@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  MODERATOR
+  CONTENT_MANAGER
+  ADMINISTRATOR
+  SUPER_ADMIN
+}
+
+enum AcademicLevel {
+  YEAR_1
+  YEAR_2
+  YEAR_3
+  YEAR_4
+  YEAR_5
+  YEAR_6
+  POSTGRADUATE
+}
+
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  passwordHash    String
+  fullName        String
+  avatarUrl       String?
+  role            Role           @default(STUDENT)
+  isEmailVerified Boolean        @default(false)
+  universityId    String?
+  facultyId       String?
+  departmentId    String?
+  academicLevel   AcademicLevel?
+  currentSemester Int?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  university    University?    @relation(fields: [universityId], references: [id])
+  faculty       Faculty?       @relation(fields: [facultyId], references: [id])
+  department    Department?    @relation(fields: [departmentId], references: [id])
+  refreshTokens RefreshToken[]
+
+  @@index([universityId])
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked   Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model University {
+  id        String   @id @default(cuid())
+  name      String
+  shortName String
+  logoUrl   String?
+  state     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  faculties Faculty[]
+  users     User[]
+}
+
+model Faculty {
+  id           String   @id @default(cuid())
+  name         String
+  universityId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  university  University  @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  departments Department[]
+  users       User[]
+
+  @@unique([universityId, name])
+  @@index([universityId])
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  name      String
+  facultyId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  faculty Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  users   User[]
+
+  @@unique([facultyId, name])
+  @@index([facultyId])
+}
