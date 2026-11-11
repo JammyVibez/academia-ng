@@ -1,7 +1,11 @@
 /**
  * Development seed data — Nigerian universities for registration testing.
  * Run: npm run seed
+ *
+ * "dotenv/config" is required here: the Prisma CLI reads .env automatically but
+ * a plain ts-node script does not.
  */
+import 'dotenv/config';
 import { PrismaClient, AcademicLevel } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
