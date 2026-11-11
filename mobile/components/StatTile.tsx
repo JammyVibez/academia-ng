@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
+import { useCountUp, usePopIn } from '../lib/motion';
 import { colors } from '../lib/theme';
 
 type Tone = 'primary' | 'accent' | 'neutral';
@@ -9,6 +10,8 @@ interface Props {
   value: string;
   label: string;
   tone?: Tone;
+  /** Push the animation later so it lands after the card has faded in. */
+  delay?: number;
 }
 
 const TONES: Record<Tone, { bg: string; icon: string }> = {
@@ -17,16 +20,19 @@ const TONES: Record<Tone, { bg: string; icon: string }> = {
   neutral: { bg: colors.surfaceMuted, icon: colors.textSecondary },
 };
 
-export function StatTile({ icon, value, label, tone = 'primary' }: Props) {
+export function StatTile({ icon, value, label, tone = 'primary', delay = 0 }: Props) {
   const palette = TONES[tone];
+  const numeric = /^\d+$/.test(value.trim());
+  const counted = useCountUp(numeric ? Number(value) : 0, 280 + delay, 780);
+  const pop = usePopIn(0.5, 140 + delay);
 
   return (
     <View style={styles.tile}>
-      <View style={[styles.iconWrap, { backgroundColor: palette.bg }]}>
+      <Animated.View style={[styles.iconWrap, { backgroundColor: palette.bg, transform: [{ scale: pop }] }]}>
         <Ionicons name={icon} size={15} color={palette.icon} />
-      </View>
+      </Animated.View>
       <Text style={styles.value} numberOfLines={1}>
-        {value}
+        {numeric ? String(counted) : value}
       </Text>
       <Text style={styles.label} numberOfLines={1}>
         {label}

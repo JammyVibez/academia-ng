@@ -4,6 +4,7 @@ import { Card } from '../../components/Card';
 import { CourseCard } from '../../components/CourseCard';
 import { EmptyState } from '../../components/EmptyState';
 import { ErrorNotice } from '../../components/ErrorNotice';
+import { Reveal } from '../../components/Reveal';
 import { Screen } from '../../components/Screen';
 import { SectionHeader } from '../../components/SectionHeader';
 import { SkeletonList } from '../../components/Skeleton';
@@ -69,48 +70,71 @@ export default function HomeScreen() {
       >
         <ErrorNotice message={errorMessage} />
 
-        <Card style={styles.snapshot}>
-          <StatTile icon="book-outline" value={String(registered.length)} label="Courses" />
-          <View style={styles.divider} />
-          <StatTile icon="layers-outline" value={String(totalUnits)} label="Units" tone="accent" />
-          <View style={styles.divider} />
-          <StatTile icon="ribbon-outline" value={levelShortLabel(profile?.academicLevel)} label="Level" tone="neutral" />
-        </Card>
+        <Reveal delay={60}>
+          <Card style={styles.snapshot}>
+            <StatTile icon="book-outline" value={String(registered.length)} label="Courses" />
+            <View style={styles.divider} />
+            <StatTile icon="layers-outline" value={String(totalUnits)} label="Units" tone="accent" delay={70} />
+            <View style={styles.divider} />
+            <StatTile
+              icon="ribbon-outline"
+              value={levelShortLabel(profile?.academicLevel)}
+              label="Level"
+              tone="neutral"
+              delay={140}
+            />
+          </Card>
+        </Reveal>
 
-        <SectionHeader
-          title="Your courses"
-          subtitle="This semester's registered courses"
-          badge={registered.length ? String(registered.length) : undefined}
-        />
+        <Reveal delay={140}>
+          <SectionHeader
+            title="Your courses"
+            subtitle="This semester's registered courses"
+            badge={registered.length ? String(registered.length) : undefined}
+          />
+        </Reveal>
+
         {dashboard.isLoading && !dashboard.data ? (
           <SkeletonList count={2} />
         ) : registered.length ? (
-          registered.map((course) => <CourseCard key={course.id} course={course} enrolled />)
-        ) : (
-          <EmptyState
-            icon="book-outline"
-            title="No courses yet"
-            message="Open the catalogue to register your first course for this semester."
-          />
-        )}
-
-        <SectionHeader
-          title="Recommended for you"
-          subtitle="Picked around your level and department"
-          actionLabel="Catalogue"
-          onAction={() => router.push('/(tabs)/learn')}
-        />
-        {recommended.length ? (
-          recommended.map((course) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              onToggle={() => enrol(course.id)}
-              toggling={enrolment.isPending && enrolment.variables?.courseId === course.id}
-            />
+          registered.map((course, index) => (
+            <Reveal key={course.id} delay={200 + index * 70}>
+              <CourseCard course={course} enrolled />
+            </Reveal>
           ))
         ) : (
-          <Text style={styles.footnote}>You are all caught up — nothing new to recommend right now.</Text>
+          <Reveal delay={200}>
+            <EmptyState
+              icon="book-outline"
+              title="No courses yet"
+              message="Open the catalogue to register your first course for this semester."
+            />
+          </Reveal>
+        )}
+
+        <Reveal delay={240}>
+          <SectionHeader
+            title="Recommended for you"
+            subtitle="Picked around your level and department"
+            actionLabel="Catalogue"
+            onAction={() => router.push('/(tabs)/learn')}
+          />
+        </Reveal>
+
+        {recommended.length ? (
+          recommended.map((course, index) => (
+            <Reveal key={course.id} delay={280 + index * 70}>
+              <CourseCard
+                course={course}
+                onToggle={() => enrol(course.id)}
+                toggling={enrolment.isPending && enrolment.variables?.courseId === course.id}
+              />
+            </Reveal>
+          ))
+        ) : (
+          <Reveal delay={280}>
+            <Text style={styles.footnote}>You are all caught up — nothing new to recommend right now.</Text>
+          </Reveal>
         )}
       </ScrollView>
     </Screen>

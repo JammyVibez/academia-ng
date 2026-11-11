@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { Touchable } from './Touchable';
 import { colors, radius } from '../lib/theme';
 
 type Tone = 'neutral' | 'primary' | 'accent' | 'success';
@@ -27,19 +28,19 @@ export function Chip({ label, tone = 'neutral', icon, onPress }: Props) {
     </>
   );
 
-  const base = [styles.chip, { backgroundColor: palette.bg, borderColor: palette.border }];
+  const base = { backgroundColor: palette.bg, borderColor: palette.border };
 
-  if (!onPress) return <View style={base}>{content}</View>;
+  if (!onPress) return <View style={[styles.chip, base]}>{content}</View>;
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
+    <Touchable
       onPress={onPress}
-      style={({ pressed }) => [...base, pressed ? styles.pressed : null]}
+      scaleTo={0.93}
+      accessibilityLabel={label}
+      innerStyle={[styles.chip, base]}
     >
       {content}
-    </Pressable>
+    </Touchable>
   );
 }
 
@@ -54,5 +55,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   label: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.2 },
-  pressed: { opacity: 0.7 },
 });

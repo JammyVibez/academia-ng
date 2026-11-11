@@ -12,6 +12,7 @@ import { Card } from '../../components/Card';
 import { Chip } from '../../components/Chip';
 import { CourseCard } from '../../components/CourseCard';
 import { EmptyState } from '../../components/EmptyState';
+import { Reveal } from '../../components/Reveal';
 import { Screen } from '../../components/Screen';
 import { SearchInput } from '../../components/SearchInput';
 import { Select } from '../../components/Select';
@@ -76,75 +77,81 @@ export default function LearnScreen() {
       <FlatList
         data={items}
         keyExtractor={(course) => course.id}
-        renderItem={({ item }) => (
-          <CourseCard
-            course={item}
-            enrolled={enrolledIds.has(item.id)}
-            onToggle={() => toggle(item)}
-            toggling={enrolment.isPending && enrolment.variables?.courseId === item.id}
-          />
+        renderItem={({ item, index }) => (
+          <Reveal delay={Math.min(index, 8) * 55} offset={12}>
+            <CourseCard
+              course={item}
+              enrolled={enrolledIds.has(item.id)}
+              onToggle={() => toggle(item)}
+              toggling={enrolment.isPending && enrolment.variables?.courseId === item.id}
+            />
+          </Reveal>
         )}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
-          <View>
-            <SearchInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder="Search course code or title"
-            />
+          <Reveal delay={0} offset={10}>
+            <View>
+              <SearchInput
+                value={search}
+                onChangeText={setSearch}
+                placeholder="Search course code or title"
+              />
 
-            <Card style={styles.filters}>
-              <View style={styles.filterRow}>
-                <View style={styles.filterItem}>
-                  <Select
-                    label="Level"
-                    value={level}
-                    options={[{ value: '', label: 'All levels' }, ...LEVEL_OPTIONS]}
-                    onChange={setLevel}
-                  />
+              <Card style={styles.filters}>
+                <View style={styles.filterRow}>
+                  <View style={styles.filterItem}>
+                    <Select
+                      label="Level"
+                      value={level}
+                      options={[{ value: '', label: 'All levels' }, ...LEVEL_OPTIONS]}
+                      onChange={setLevel}
+                    />
+                  </View>
+                  <View style={styles.filterItem}>
+                    <Select label="Semester" value={semester} options={SEMESTER_OPTIONS} onChange={setSemester} />
+                  </View>
                 </View>
-                <View style={styles.filterItem}>
-                  <Select label="Semester" value={semester} options={SEMESTER_OPTIONS} onChange={setSemester} />
-                </View>
-              </View>
 
-              {activeFilters ? (
-                <View style={styles.activeRow}>
-                  {debouncedSearch ? (
-                    <Chip label={`“${debouncedSearch}”`} tone="primary" icon="search" onPress={() => setSearch('')} />
-                  ) : null}
-                  {level ? (
-                    <Chip
-                      label={LEVEL_LABELS[level as AcademicLevel]}
-                      tone="primary"
-                      icon="close"
-                      onPress={() => setLevel('')}
-                    />
-                  ) : null}
-                  {semester ? (
-                    <Chip
-                      label={`Semester ${semester}`}
-                      tone="primary"
-                      icon="close"
-                      onPress={() => setSemester('')}
-                    />
-                  ) : null}
-                  <Chip label="Clear all" tone="neutral" onPress={clearFilters} />
-                </View>
+                {activeFilters ? (
+                  <Reveal delay={20} offset={6}>
+                    <View style={styles.activeRow}>
+                      {debouncedSearch ? (
+                        <Chip label={`“${debouncedSearch}”`} tone="primary" icon="search" onPress={() => setSearch('')} />
+                      ) : null}
+                      {level ? (
+                        <Chip
+                          label={LEVEL_LABELS[level as AcademicLevel]}
+                          tone="primary"
+                          icon="close"
+                          onPress={() => setLevel('')}
+                        />
+                      ) : null}
+                      {semester ? (
+                        <Chip
+                          label={`Semester ${semester}`}
+                          tone="primary"
+                          icon="close"
+                          onPress={() => setSemester('')}
+                        />
+                      ) : null}
+                      <Chip label="Clear all" tone="neutral" onPress={clearFilters} />
+                    </View>
+                  </Reveal>
+                ) : null}
+              </Card>
+
+              {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+
+              {items.length ? (
+                <Text style={styles.count}>
+                  {items.length} course{items.length === 1 ? '' : 's'}
+                  {activeFilters ? ' match your filters' : ' available'}
+                </Text>
               ) : null}
-            </Card>
-
-            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-
-            {items.length ? (
-              <Text style={styles.count}>
-                {items.length} course{items.length === 1 ? '' : 's'}
-                {activeFilters ? ' match your filters' : ' available'}
-              </Text>
-            ) : null}
-          </View>
+            </View>
+          </Reveal>
         }
         ListEmptyComponent={
           courses.isLoading ? (

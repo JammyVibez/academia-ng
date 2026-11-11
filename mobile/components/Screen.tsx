@@ -18,12 +18,13 @@ export function Screen({ children }: { children: ReactNode }) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg, alignItems: 'center' },
+  root: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', overflow: 'hidden' },
   frame: { flex: 1, width: '100%', maxWidth: 520, backgroundColor: colors.bg },
   frameWide: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: colors.border,
+    borderRadius: radius.xl,
     ...shadow.raised,
   },
 });

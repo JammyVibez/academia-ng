@@ -7,6 +7,7 @@ import { Chip } from '../../components/Chip';
 import { DetailRow } from '../../components/DetailRow';
 import { ErrorNotice } from '../../components/ErrorNotice';
 import { Field } from '../../components/Field';
+import { Reveal } from '../../components/Reveal';
 import { Screen } from '../../components/Screen';
 import { SectionHeader } from '../../components/SectionHeader';
 import { TopBar } from '../../components/TopBar';
@@ -66,83 +67,93 @@ export default function ProfileScreen() {
       <TopBar title="Profile" subtitle="Account and academics" />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Card style={styles.hero}>
-          <View style={styles.avatarRing}>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{initial}</Text>
+        <Reveal delay={50}>
+          <Card style={styles.hero}>
+            <View style={styles.avatarRing}>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarText}>{initial}</Text>
+              </View>
             </View>
-          </View>
-          <Text style={styles.name} numberOfLines={1}>
-            {profile?.fullName ?? 'Student'}
-          </Text>
-          <Text style={styles.email} numberOfLines={1}>
-            {profile?.email ?? ''}
-          </Text>
-          <View style={styles.chips}>
-            {profile?.academicLevel ? <Chip label={levelLabel(profile.academicLevel) ?? ''} tone="primary" /> : null}
-            {profile?.currentSemester ? (
-              <Chip label={`Semester ${profile.currentSemester}`} tone="accent" icon="calendar-outline" />
-            ) : null}
-          </View>
-        </Card>
+            <Text style={styles.name} numberOfLines={1}>
+              {profile?.fullName ?? 'Student'}
+            </Text>
+            <Text style={styles.email} numberOfLines={1}>
+              {profile?.email ?? ''}
+            </Text>
+            <View style={styles.chips}>
+              {profile?.academicLevel ? <Chip label={levelLabel(profile.academicLevel) ?? ''} tone="primary" /> : null}
+              {profile?.currentSemester ? (
+                <Chip label={`Semester ${profile.currentSemester}`} tone="accent" icon="calendar-outline" />
+              ) : null}
+            </View>
+          </Card>
+        </Reveal>
 
-        <SectionHeader title="Academic details" subtitle="From your registration" />
-        <Card>
-          <DetailRow icon="business-outline" label="University" value={profile?.university?.name ?? profile?.university?.shortName} />
-          <DetailRow icon="school-outline" label="Faculty" value={profile?.faculty?.name} />
-          <DetailRow icon="layers-outline" label="Department" value={profile?.department?.name} />
-          <DetailRow icon="ribbon-outline" label="Level" value={levelLabel(profile?.academicLevel)} />
-          <DetailRow
-            icon="calendar-outline"
-            label="Semester"
-            value={profile?.currentSemester ? `Semester ${profile.currentSemester}` : null}
-            last
-          />
-        </Card>
+        <Reveal delay={150}>
+          <SectionHeader title="Academic details" subtitle="From your registration" />
+          <Card>
+            <DetailRow icon="business-outline" label="University" value={profile?.university?.name ?? profile?.university?.shortName} />
+            <DetailRow icon="school-outline" label="Faculty" value={profile?.faculty?.name} />
+            <DetailRow icon="layers-outline" label="Department" value={profile?.department?.name} />
+            <DetailRow icon="ribbon-outline" label="Level" value={levelLabel(profile?.academicLevel)} />
+            <DetailRow
+              icon="calendar-outline"
+              label="Semester"
+              value={profile?.currentSemester ? `Semester ${profile.currentSemester}` : null}
+              last
+            />
+          </Card>
+        </Reveal>
 
-        <SectionHeader title="Account" subtitle="How you appear across the app" />
-        <Card>
-          <ErrorNotice message={error} />
-          <Field
-            label="Full name"
-            value={name}
-            onChangeText={(value) => {
-              setName(value);
-              setSaved(false);
-            }}
-            autoCapitalize="words"
-            autoComplete="name"
-            textContentType="name"
-          />
+        <Reveal delay={220}>
+          <SectionHeader title="Account" subtitle="How you appear across the app" />
+          <Card>
+            <ErrorNotice message={error} />
+            <Field
+              label="Full name"
+              value={name}
+              onChangeText={(value) => {
+                setName(value);
+                setSaved(false);
+              }}
+              autoCapitalize="words"
+              autoComplete="name"
+              textContentType="name"
+            />
+            <Button
+              label={saved ? 'Saved' : 'Save changes'}
+              onPress={() => void save()}
+              loading={saving}
+              variant={saved ? 'outline' : 'primary'}
+              icon={saved ? 'checkmark' : 'save-outline'}
+            />
+            {saved ? <Text style={styles.saved}>Your profile has been updated.</Text> : null}
+          </Card>
+        </Reveal>
+
+        <Reveal delay={290}>
+          <SectionHeader title="Connection" subtitle="Where this app reads its data" />
+          <Card>
+            <View style={styles.serverRow}>
+              <Chip label="API server" tone="neutral" icon="server-outline" />
+            </View>
+            <Text style={styles.apiUrl}>{API_URL}</Text>
+            <Text style={styles.hint}>Set EXPO_PUBLIC_API_URL in mobile/.env to change the server.</Text>
+          </Card>
+        </Reveal>
+
+        <Reveal delay={340}>
           <Button
-            label={saved ? 'Saved' : 'Save changes'}
-            onPress={() => void save()}
-            loading={saving}
-            variant={saved ? 'outline' : 'primary'}
-            icon={saved ? 'checkmark' : 'save-outline'}
+            label="Log out"
+            onPress={() => {
+              queryClient.clear();
+              void logout();
+            }}
+            variant="outline"
+            icon="log-out-outline"
+            style={styles.logout}
           />
-          {saved ? <Text style={styles.saved}>Your profile has been updated.</Text> : null}
-        </Card>
-
-        <SectionHeader title="Connection" subtitle="Where this app reads its data" />
-        <Card>
-          <View style={styles.serverRow}>
-            <Chip label="API server" tone="neutral" icon="server-outline" />
-          </View>
-          <Text style={styles.apiUrl}>{API_URL}</Text>
-          <Text style={styles.hint}>Set EXPO_PUBLIC_API_URL in mobile/.env to change the server.</Text>
-        </Card>
-
-        <Button
-          label="Log out"
-          onPress={() => {
-            queryClient.clear();
-            void logout();
-          }}
-          variant="outline"
-          icon="log-out-outline"
-          style={styles.logout}
-        />
+        </Reveal>
       </ScrollView>
     </Screen>
   );
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 40,
     borderWidth: 1.5,
-    borderColor: 'rgba(200,163,74,0.55)',
+    borderColor: 'rgba(244,114,182,0.65)',
     marginBottom: spacing.md,
   },
   avatar: {

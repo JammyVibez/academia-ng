@@ -5,8 +5,10 @@ import { BrandMark } from '../../components/BrandMark';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Chip } from '../../components/Chip';
+import { PulseRings } from '../../components/Lottie';
 import { ErrorNotice } from '../../components/ErrorNotice';
 import { Field } from '../../components/Field';
+import { Reveal } from '../../components/Reveal';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../lib/auth-store';
 import { API_URL } from '../../lib/config';
@@ -53,63 +55,76 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.hero}>
-            <BrandMark size={62} />
-            <Text style={styles.title}>Academia NG</Text>
-            <Text style={styles.tagline}>Your Nigerian university companion</Text>
-            <Chip label="Premium academic toolkit" tone="accent" icon="sparkles" />
-          </View>
+          <Reveal delay={40} durationMs={620}>
+            <View style={styles.hero}>
+              <View style={styles.markWrap}>
+                <View pointerEvents="none" style={styles.pulseLayer}>
+                  <PulseRings size={170} />
+                </View>
+                <BrandMark size={62} />
+              </View>
+              <Text style={styles.title}>Academia NG</Text>
+              <Text style={styles.tagline}>Your Nigerian university companion</Text>
+              <Chip label="Premium academic toolkit" tone="accent" icon="sparkles" />
+            </View>
+          </Reveal>
 
-          <Card style={styles.card}>
-            <Text style={styles.cardTitle}>Welcome back</Text>
-            <Text style={styles.cardSubtitle}>Sign in to pick up where you stopped.</Text>
+          <Reveal delay={180}>
+            <Card style={styles.card}>
+              <Text style={styles.cardTitle}>Welcome back</Text>
+              <Text style={styles.cardSubtitle}>Sign in to pick up where you stopped.</Text>
 
-            <View style={styles.spacer} />
-            <ErrorNotice message={error} />
+              <View style={styles.spacer} />
+              <ErrorNotice message={error} />
 
-            <Field
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="you@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="email"
-              textContentType="emailAddress"
-              returnKeyType="next"
-            />
-            <Field
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Your password"
-              secureTextEntry
-              autoCapitalize="none"
-              autoComplete="current-password"
-              textContentType="password"
-              returnKeyType="go"
-              onSubmitEditing={() => void submit()}
-            />
+              <Field
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="you@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
+                textContentType="emailAddress"
+                returnKeyType="next"
+              />
+              <Field
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Your password"
+                secureTextEntry
+                autoCapitalize="none"
+                autoComplete="current-password"
+                textContentType="password"
+                returnKeyType="go"
+                onSubmitEditing={() => void submit()}
+              />
 
-            <Button label="Sign in" onPress={() => void submit()} loading={submitting} icon="arrow-forward" />
-            <Button
-              label="Use demo account"
-              onPress={signInWithDemo}
-              variant="ghost"
-              disabled={submitting}
-              style={styles.demo}
-            />
-          </Card>
+              <Button label="Sign in" onPress={() => void submit()} loading={submitting} icon="arrow-forward" />
+              <Button
+                label="Use demo account"
+                onPress={signInWithDemo}
+                variant="ghost"
+                disabled={submitting}
+                style={styles.demo}
+              />
+            </Card>
+          </Reveal>
 
-          <View style={styles.linkRow}>
-            <Text style={styles.linkText}>New here? </Text>
-            <Pressable accessibilityRole="link" onPress={() => router.push('/(auth)/register')} hitSlop={10}>
-              <Text style={styles.link}>Create an account</Text>
-            </Pressable>
-          </View>
+          <Reveal delay={300} offset={10}>
+            <View style={styles.linkRow}>
+              <Text style={styles.linkText}>New here? </Text>
+              <Pressable accessibilityRole="link" onPress={() => router.push('/(auth)/register')} hitSlop={10}>
+                <Text style={styles.link}>Create an account</Text>
+              </Pressable>
+            </View>
+          </Reveal>
 
-          <Text style={styles.apiNote}>API · {API_URL}</Text>
+          <Reveal delay={400} offset={8}>
+            <Text style={styles.apiNote}>API · {API_URL}</Text>
+          </Reveal>
         </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
@@ -126,6 +141,16 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
   },
   hero: { alignItems: 'center', marginBottom: spacing.xxl },
+  markWrap: { width: 62, height: 62, alignItems: 'center', justifyContent: 'center' },
+  pulseLayer: {
+    position: 'absolute',
+    top: -54,
+    left: -54,
+    width: 170,
+    height: 170,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 27,
     fontWeight: '800',

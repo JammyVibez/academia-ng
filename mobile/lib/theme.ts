@@ -1,30 +1,30 @@
 /**
- * Academia NG design tokens — calm, premium, academic.
+ * Academia NG design tokens — violet ink, white paper, pink light.
  * Mirrored by the web client so both platforms share one visual language.
  */
 export const colors = {
-  primary: '#0E3B2E',
-  primaryDark: '#082A20',
-  primaryLight: '#1B5745',
-  primarySoft: '#E6EFEA',
-  accent: '#C8A34A',
-  accentDark: '#997628',
-  accentSoft: '#F8F0DA',
-  bg: '#F4F6F3',
+  primary: '#5B21B6',
+  primaryDark: '#1B0B2E',
+  primaryLight: '#7C3AED',
+  primarySoft: '#EFE6FE',
+  accent: '#EC4899',
+  accentDark: '#BE185D',
+  accentSoft: '#FCE7F3',
+  bg: '#F8F6FC',
   surface: '#FFFFFF',
-  surfaceMuted: '#EEF2EE',
-  text: '#121A16',
-  textSecondary: '#3F4B45',
-  muted: '#78857E',
-  border: '#E3E7E0',
-  borderStrong: '#CFD6CE',
+  surfaceMuted: '#F1ECF9',
+  text: '#0B0710',
+  textSecondary: '#3B3247',
+  muted: '#6E6580',
+  border: '#E7E1EF',
+  borderStrong: '#D4C9E4',
   danger: '#B3261E',
   dangerBg: '#FBEAE7',
-  success: '#1F7A58',
-  successSoft: '#E7F3ED',
+  success: '#BE185D',
+  successSoft: '#FCE7F3',
   onPrimary: '#FFFFFF',
-  onPrimaryMuted: 'rgba(255,255,255,0.72)',
-  overlay: 'rgba(8,22,17,0.5)',
+  onPrimaryMuted: 'rgba(255,255,255,0.74)',
+  overlay: 'rgba(11,7,16,0.55)',
 } as const;
 
 export const spacing = {
@@ -47,24 +47,42 @@ export const radius = {
 
 export const shadow = {
   card: {
-    shadowColor: '#0B241C',
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
+    shadowColor: '#1B0B2E',
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
     shadowOffset: { width: 0, height: 6 },
     elevation: 2,
   },
   raised: {
-    shadowColor: '#0B241C',
-    shadowOpacity: 0.16,
+    shadowColor: '#1B0B2E',
+    shadowOpacity: 0.18,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 12 },
     elevation: 8,
   },
   button: {
-    shadowColor: '#0E3B2E',
-    shadowOpacity: 0.28,
-    shadowRadius: 12,
+    shadowColor: '#5B21B6',
+    shadowOpacity: 0.3,
+    shadowRadius: 14,
     shadowOffset: { width: 0, height: 6 },
     elevation: 4,
   },
+  glow: {
+    shadowColor: '#EC4899',
+    shadowOpacity: 0.38,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 6,
+  },
+} as const;
+
+/** Gradient ramps used for hero surfaces, primary actions and light sweeps. */
+export const gradients = {
+  hero: ['#2A0B4A', '#5B21B6', '#1B0B2E'] as const,
+  heroDeep: ['#0B0710', '#2E1065'] as const,
+  primary: ['#7C3AED', '#5B21B6'] as const,
+  pink: ['#F472B6', '#DB2777'] as const,
+  pinkSoft: ['#FDE8F4', '#F9CFE7'] as const,
+  sheen: ['rgba(255,255,255,0)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0)'] as const,
+  shimmer: ['rgba(255,255,255,0)', 'rgba(255,255,255,0.9)', 'rgba(255,255,255,0)'] as const,
 } as const;
