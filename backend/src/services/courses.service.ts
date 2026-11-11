@@ -115,11 +115,11 @@ export async function listMyCourses(userId: string) {
     },
   });
   return enrollments.map((e) => ({
+    ...e.course,
     enrollmentId: e.id,
     session: e.session,
-    semester: e.semester,
+    enrolledSemester: e.semester,
     enrolledAt: e.createdAt,
-    ...e.course,
   }));
 }
 

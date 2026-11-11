@@ -10,12 +10,12 @@ Premium academic companion for Nigerian university students.
 |-------|--------|
 | 1 — Foundation, schema, design system | Done |
 | 2 — Auth, onboarding, profiles | Done |
-| 3 — Home dashboard, courses | Next |
+| 3 — Home dashboard, courses | Done |
 | 4–10 | Planned |
 
 ## Stack
 
-- **Mobile:** React Native, Expo, Expo Router, TypeScript, NativeWind, React Query, Zustand, SecureStore
+- **Mobile:** React Native, Expo (SDK 58), Expo Router, TypeScript, React Query, Zustand, SecureStore, StyleSheet design tokens
 - **Backend:** Node, Express, TypeScript, Prisma, PostgreSQL, JWT (access + refresh rotation), Zod
 
 ## Quick start
@@ -38,10 +38,29 @@ Demo login: `demo@academia.ng` / `Student123`
 
 ```bash
 cd mobile
-# set EXPO_PUBLIC_API_URL=http://YOUR_LAN_IP:4000/api  (not localhost on device)
+cp .env.example .env    # EXPO_PUBLIC_API_URL=http://YOUR_LAN_IP:4000/api (not localhost on a device)
 npm install
 npx expo start
 ```
+
+Screens: sign in / create account (university → faculty → department cascade, level), Home dashboard
+(registered courses, units, recommendations with one-tap enrol), Learn catalogue (search, level and
+semester filters, enrol/unenrol, paging) and Profile (academic details, name editing, API server, logout).
+Run `npm run typecheck` to check the app without starting Metro.
+
+### Web preview (no Expo needed)
+
+```bash
+cd web
+python3 -m http.server 3000   # or any static file server
+```
+
+Open `http://localhost:3000`. The client calls `http://localhost:4000/api` by default; point it at your
+API with the **API server** field on the login screen, or open `http://localhost:3000/?api=https://your-api.vercel.app/api`.
+
+Screens: sign in / create account (university → faculty → department cascade), home dashboard with
+registered courses and recommendations, course catalogue with search + level/semester filters and
+enrol/unenrol, and profile with name editing and logout.
 
 ## Auth API (Phase 2)
 
